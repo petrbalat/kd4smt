@@ -1,0 +1,18 @@
+<!DOCTYPE html >
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Hello world</title>
+</head>
+<body>
+<!--/*@thymesVar id="name" type="java.lang.String"*/-->
+<!--/*@thymesVar id="dto" type="cz.petrbalat.spring.mvc.test.dsl.controller.PostDto"*/-->
+
+<h1>
+    Hello
+    <span th:if="${name != null}" th:text="${name}">Hello for name</span>
+    <span th:if="${dto != null}" th:text="${dto.name}">Hello for name</span>
+</h1>
+
+</body>
+</html>
