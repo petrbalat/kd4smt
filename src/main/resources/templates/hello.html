@@ -6,12 +6,12 @@
 </head>
 <body>
 <!--/*@thymesVar id="name" type="java.lang.String"*/-->
-<!--/*@thymesVar id="dto" type="cz.petrbalat.spring.mvc.test.dsl.controller.PostDto"*/-->
+<!--/*@thymesVar id="helloPostDto" type="cz.petrbalat.spring.mvc.test.dsl.controller.HelloPostDto"*/-->
 
 <h1>
     Hello
     <span th:if="${name != null}" th:text="${name}">Hello for name</span>
-    <span th:if="${dto != null}" th:text="${dto.name}">Hello for name</span>
+    <span th:if="${helloPostDto != null}" th:text="${helloPostDto.surname}">Hello for surname</span>
 </h1>
 
 </body>

@@ -4,8 +4,8 @@ import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 
 @SpringBootApplication
-class KotlinDslSpringMvcTestApplication
+class KD4SMTApplication
 
 fun main(args: Array<String>) {
-    SpringApplication.run(KotlinDslSpringMvcTestApplication::class.java, *args)
+    SpringApplication.run(KD4SMTApplication::class.java, *args)
 }
