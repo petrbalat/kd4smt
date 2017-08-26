@@ -1,0 +1,2 @@
+//kotlin dsl for spring mvc test
+rootProject.name = 'kd4smt'
