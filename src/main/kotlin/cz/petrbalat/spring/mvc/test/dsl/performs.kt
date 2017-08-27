@@ -32,8 +32,12 @@ fun MockMvc.performPost(url:String, vararg uriVars:Any,
     return perform.andReturn()
 }
 
-fun MockMvc.performPost(uri: URI, init: ResultActions.() -> Unit): MvcResult {
-    val perform = this.perform(MockMvcRequestBuilders.post(uri))
+fun MockMvc.performPost(uri: URI,
+                        requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
+                        init: ResultActions.() -> Unit): MvcResult {
+    val request = MockMvcRequestBuilders.post(uri)
+    request.requestInit()
+    val perform = this.perform(request)
     perform.init()
     return perform.andReturn()
 }

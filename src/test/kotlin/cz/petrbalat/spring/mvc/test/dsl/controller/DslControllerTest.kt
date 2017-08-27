@@ -13,18 +13,18 @@ import org.springframework.web.context.WebApplicationContext
 
 @RunWith(SpringRunner::class)
 @SpringBootTest(classes = arrayOf(KD4SMTApplication::class))
-class DslControllerTest {
+class DslControllerTest : MockMvcProvider {
 
     @Autowired
     lateinit var context: WebApplicationContext
 
-    val mvc: MockMvc  by lazy {
+    override val mockMvc: MockMvc  by lazy {
         MockMvcBuilders.webAppContextSetup(context).build()
     }
 
     @Test
     fun helloGet() {
-        mvc.performGet("/hello?name=Petr") {
+        mockMvc.performGet("/hello?name=Petr") {
             expectStatus {
                 isOk
             }
@@ -52,8 +52,35 @@ class DslControllerTest {
     }
 
     @Test
+    fun helloGet2() = performGet("/hello?name=Petr") {
+        expectStatus {
+            isOk
+        }
+
+        expectContent {
+            contentTypeCompatibleWith(MediaType.TEXT_HTML)
+        }
+
+        expectViewName("hello")
+
+        expectModel {
+            size<Any>(1)
+            attribute("name", "Petr")
+        }
+
+        expectXPath("//h1") {
+            nodeCount(1)
+        }
+
+        expectXPath("""//span[@class="name"]""") {
+            nodeCount(1)
+            string("Petr")
+        }
+    }
+
+    @Test
     fun helloPost() {
-        mvc.performPost("/hello", requestInit = {
+        mockMvc.performPost("/hello", requestInit = {
             contentType(MediaType.APPLICATION_FORM_URLENCODED)
             param("surname", "Balat")
         }) {
