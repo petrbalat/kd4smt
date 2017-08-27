@@ -6,11 +6,16 @@ standart spring mvc test (see StandardControllerTest):
 ```kotlin
  val mvc: MockMvc
  
- @Test
- fun hello() {
+ 
+    @Test
+     fun hello() {
          val requestBuilder = get("/hello?name={1}", "Petr")
+         val className = MockMvcResultMatchers.xpath("""//span[@class="name"]""")
          val actions: ResultActions = mvc.perform(requestBuilder)
                  .andExpect(MockMvcResultMatchers.status().isOk)
+                 .andExpect(MockMvcResultMatchers.xpath("//h1").nodeCount(1))
+                 .andExpect(className.nodeCount(1))
+                 .andExpect(className.string("Petr"))
                  .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
          val result: MvcResult = actions.andReturn()
  
@@ -18,10 +23,6 @@ standart spring mvc test (see StandardControllerTest):
          assertEquals("hello", modelAndView.viewName)
          assertEquals(1, modelAndView.model.size)
          assertEquals("Petr", modelAndView.model["name"])
- 
-         val response = result.response.contentAsString
-         assertTrue(response.contains("Hello"))
-         assertTrue(response.contains("Petr"))
      }
 
 ```
@@ -34,14 +35,8 @@ dsl spring mvc test (see DslControllerTest):
  @Test
  fun helloGet() {
          mockMvc.performGet("/hello?name=Petr") {
-             expectStatus {
-                 isOk
-             }
- 
-             expectContent {
-                 contentTypeCompatibleWith(MediaType.TEXT_HTML)
-             }
- 
+             expectStatus { isOk }
+             expectContent { contentTypeCompatibleWith(MediaType.TEXT_HTML) }
              expectViewName("hello")
  
              expectModel {
@@ -68,14 +63,8 @@ or if you implement MockMvcProvider  (see DslControllerTest):
  
  @Test
  fun helloGetExpression() = performGet("/hello?name=Petr") {
-         expectStatus {
-             isOk
-         }
- 
-         expectContent {
-             contentTypeCompatibleWith(MediaType.TEXT_HTML)
-         }
- 
+         expectStatus { isOk }
+         expectContent { contentTypeCompatibleWith(MediaType.TEXT_HTML) }
          expectViewName("hello")
  
          expectModel {
@@ -92,6 +81,34 @@ or if you implement MockMvcProvider  (see DslControllerTest):
              string("Petr")
          }
      }
+     
+    @Test
+    fun helloPost() = performPost("/hello", requestInit = {
+        contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        param("surname", "Balat")
+    }) {
+        expectStatus { isOk }
+        expectContent { contentTypeCompatibleWith(MediaType.TEXT_HTML) }
+        expectViewName("hello")
+
+        expectModel {
+            size<Any>(2)
+            attribute("helloPostDto", HelloPostDto("Balat"))
+        }
+
+        expectModel<HelloPostDto>("helloPostDto") {
+            assertEquals("Balat", surname)
+        }
+
+        expectXPath("//h1") {
+            nodeCount(1)
+        }
+
+        expectXPath("""//span[@class="name"]""") {
+            nodeCount(1)
+            string("Balat")
+        }
+    }
 ```
 
 Gradle:
@@ -102,7 +119,7 @@ repositories {
     
 ...
 
-testCompile "cz.petrbalat:kd4smt:0.1.0"
+testCompile "cz.petrbalat:kd4smt:0.2.0"
 ```
 
 Maven:
@@ -110,7 +127,7 @@ Maven:
 <dependency>
     <groupId>cz.petrbalat</groupId>
     <artifactId>kd4smt</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
     <scope>test</scope>
 </dependency>
 

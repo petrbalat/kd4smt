@@ -1,6 +1,7 @@
 package cz.petrbalat.spring.mvc.test.dsl.controller
 
 import cz.petrbalat.spring.mvc.test.dsl.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,14 +26,8 @@ class DslControllerTest : MockMvcProvider {
     @Test
     fun helloGet() {
         mockMvc.performGet("/hello?name=Petr") {
-            expectStatus {
-                isOk
-            }
-
-            expectContent {
-                contentTypeCompatibleWith(MediaType.TEXT_HTML)
-            }
-
+            expectStatus { isOk }
+            expectContent { contentTypeCompatibleWith(MediaType.TEXT_HTML) }
             expectViewName("hello")
 
             expectModel {
@@ -53,14 +48,8 @@ class DslControllerTest : MockMvcProvider {
 
     @Test
     fun helloGetExpression() = performGet("/hello?name=Petr") {
-        expectStatus {
-            isOk
-        }
-
-        expectContent {
-            contentTypeCompatibleWith(MediaType.TEXT_HTML)
-        }
-
+        expectStatus { isOk }
+        expectContent { contentTypeCompatibleWith(MediaType.TEXT_HTML) }
         expectViewName("hello")
 
         expectModel {
@@ -79,34 +68,30 @@ class DslControllerTest : MockMvcProvider {
     }
 
     @Test
-    fun helloPost() {
-        mockMvc.performPost("/hello", requestInit = {
-            contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            param("surname", "Balat")
-        }) {
-            expectStatus {
-                isOk
-            }
+    fun helloPost() = performPost("/hello", requestInit = {
+        contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        param("surname", "Balat")
+    }) {
+        expectStatus { isOk }
+        expectContent { contentTypeCompatibleWith(MediaType.TEXT_HTML) }
+        expectViewName("hello")
 
-            expectContent {
-                contentTypeCompatibleWith(MediaType.TEXT_HTML)
-            }
+        expectModel {
+            size<Any>(2)
+            attribute("helloPostDto", HelloPostDto("Balat"))
+        }
 
-            expectViewName("hello")
+        expectModel<HelloPostDto>("helloPostDto") {
+            assertEquals("Balat", surname)
+        }
 
-            expectModel {
-                size<Any>(2)
-                attribute("helloPostDto", HelloPostDto("Balat"))
-            }
+        expectXPath("//h1") {
+            nodeCount(1)
+        }
 
-            expectXPath("//h1") {
-                nodeCount(1)
-            }
-
-            expectXPath("""//span[@class="name"]""") {
-                nodeCount(1)
-                string("Balat")
-            }
+        expectXPath("""//span[@class="name"]""") {
+            nodeCount(1)
+            string("Balat")
         }
     }
 }

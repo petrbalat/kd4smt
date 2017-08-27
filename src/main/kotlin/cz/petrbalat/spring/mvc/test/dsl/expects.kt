@@ -24,6 +24,13 @@ fun ResultActions.expectModel(modelInit: ModelResultMatchers.() -> ResultMatcher
     return this.andExpect(model)
 }
 
+fun <T> ResultActions.expectModel(name: String, modelInit: T.() -> Unit): ResultActions {
+    return this.andExpect({ mvcResult ->
+        val model = mvcResult.modelAndView.model[name] as T
+        model.modelInit()
+    })
+}
+
 fun ResultActions.expectHeader(headerInit: HeaderResultMatchers.() -> ResultMatcher): ResultActions {
     val header = MockMvcResultMatchers.header().headerInit()
     return this.andExpect(header)

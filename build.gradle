@@ -17,7 +17,7 @@ apply plugin: 'kotlin'
 //apply plugin: 'kotlin-spring'
 apply plugin: 'org.springframework.boot'
 
-version = '0.1.0'
+version = '0.2.0'
 sourceCompatibility = 1.8
 compileKotlin {
     kotlinOptions.jvmTarget = "1.8"
@@ -40,6 +40,7 @@ dependencies {
 
     compile('org.springframework:spring-beans')
     compile('org.springframework:spring-test')
+    compile('org.springframework:spring-webmvc')
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 

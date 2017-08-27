@@ -2,7 +2,6 @@ package cz.petrbalat.spring.mvc.test.dsl.controller
 
 import cz.petrbalat.spring.mvc.test.dsl.KD4SMTApplication
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -33,8 +32,12 @@ class StandardControllerTest {
     @Test
     fun hello() {
         val requestBuilder = get("/hello?name={1}", "Petr")
+        val className = MockMvcResultMatchers.xpath("""//span[@class="name"]""")
         val actions: ResultActions = mvc.perform(requestBuilder)
                 .andExpect(MockMvcResultMatchers.status().isOk)
+                .andExpect(MockMvcResultMatchers.xpath("//h1").nodeCount(1))
+                .andExpect(className.nodeCount(1))
+                .andExpect(className.string("Petr"))
                 .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
         val result: MvcResult = actions.andReturn()
 
@@ -42,17 +45,16 @@ class StandardControllerTest {
         assertEquals("hello", modelAndView.viewName)
         assertEquals(1, modelAndView.model.size)
         assertEquals("Petr", modelAndView.model["name"])
-
-        val response = result.response.contentAsString
-        assertTrue(response.contains("Hello"))
-        assertTrue(response.contains("Petr"))
     }
 
     @Test
     fun helloPost() {
         val contentType = post("/hello").contentType(MediaType.APPLICATION_FORM_URLENCODED).param("surname", "Balat")
+        val className = MockMvcResultMatchers.xpath("""//span[@class="name"]""")
         val actions: ResultActions = mvc.perform(contentType)
                 .andExpect(MockMvcResultMatchers.status().isOk)
+                .andExpect(className.nodeCount(1))
+                .andExpect(className.string("Balat"))
                 .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
         val result: MvcResult = actions.andReturn()
 
@@ -60,10 +62,5 @@ class StandardControllerTest {
         assertEquals("hello", modelAndView.viewName)
         assertEquals(2, modelAndView.model.size)//helloPostDto and bindingResult
         assertEquals("Balat", (modelAndView.model["helloPostDto"] as HelloPostDto).surname)
-
-        val response = result.response.contentAsString
-        assertTrue(response.contains("Hello"))
-        assertTrue(response.contains("Balat"))
     }
-
 }
