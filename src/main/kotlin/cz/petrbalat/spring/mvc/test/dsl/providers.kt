@@ -12,12 +12,16 @@ interface MockMvcProvider {
 }
 
 //GET
-fun MockMvcProvider.performGet(url:String, vararg uriVars:Any, init: ResultActions.() -> Unit) {
-    this.mockMvc.performGet(url = url, uriVars = uriVars, init = init)
+fun MockMvcProvider.performGet(url:String, vararg uriVars:Any,
+                               requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
+                               init: ResultActions.() -> Unit) {
+    this.mockMvc.performGet(url = url, uriVars = uriVars, requestInit = requestInit, init = init)
 }
 
-fun MockMvcProvider.performGet(uri: URI, init: ResultActions.() -> Unit) {
-    this.mockMvc.performGet(uri = uri, init = init)
+fun MockMvcProvider.performGet(uri: URI,
+                               requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
+                               init: ResultActions.() -> Unit) {
+    this.mockMvc.performGet(uri = uri, requestInit = requestInit, init = init)
 }
 
 //POST

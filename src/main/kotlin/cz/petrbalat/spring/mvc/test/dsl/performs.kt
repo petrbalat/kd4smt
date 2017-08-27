@@ -8,14 +8,22 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import java.net.URI
 
 //GET
-fun MockMvc.performGet(url:String, vararg uriVars:Any, init: ResultActions.() -> Unit): MvcResult {
-    val perform = this.perform(MockMvcRequestBuilders.get(url, uriVars))
+fun MockMvc.performGet(url:String, vararg uriVars:Any,
+                       requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
+                       init: ResultActions.() -> Unit): MvcResult {
+    val request = MockMvcRequestBuilders.get(url, uriVars)
+    request.requestInit()
+    val perform = this.perform(request)
     perform.init()
     return perform.andReturn()
 }
 
-fun MockMvc.performGet(uri: URI, init: ResultActions.() -> Unit): MvcResult {
-    val perform = this.perform(MockMvcRequestBuilders.get(uri))
+fun MockMvc.performGet(uri: URI,
+                       requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
+                       init: ResultActions.() -> Unit): MvcResult {
+    val request = MockMvcRequestBuilders.get(uri)
+    request.requestInit()
+    val perform = this.perform(request)
     perform.init()
     return perform.andReturn()
 }
