@@ -1,7 +1,26 @@
-# kd4smt
-Kotlin dsl for spring mvc test
+# kd4smt - Kotlin dsl for spring mvc test
 
-standart spring mvc test (see StandardControllerTest):
+Imagine that you have spring mvc controller
+```kotlin
+@Controller
+class HelloController {
+
+    @GetMapping("/hello")
+    fun hello(@RequestParam name: String, modelMap: ModelMap): String {
+        modelMap["name"] = name
+        return "hello"
+    }
+
+    @PostMapping("/hello")
+    fun helloPost(dto: HelloPostDto, modelMap: ModelMap): String = "hello"
+
+}
+
+data class HelloPostDto(var surname:String = "World")
+```
+
+
+### Standart spring mvc test (see StandardControllerTest):
 
 ```kotlin
  val mvc: MockMvc
@@ -27,8 +46,7 @@ standart spring mvc test (see StandardControllerTest):
 
 ```
 
-
-dsl spring mvc test (see DslControllerTest):
+### With this library dsl spring mvc test (see DslControllerTest):
 ```kotlin
  val mvc: MockMvc
  
@@ -111,6 +129,8 @@ or if you implement MockMvcProvider  (see DslControllerTest):
     }
 ```
 
+##How to use
+
 Gradle:
 ```
 repositories {
@@ -119,7 +139,7 @@ repositories {
     
 ...
 
-testCompile "cz.petrbalat:kd4smt:0.2.0"
+testCompile "cz.petrbalat:kd4smt:0.2.1"
 ```
 
 Maven:
@@ -127,7 +147,7 @@ Maven:
 <dependency>
     <groupId>cz.petrbalat</groupId>
     <artifactId>kd4smt</artifactId>
-    <version>0.2.0</version>
+    <version>0.2.1</version>
     <scope>test</scope>
 </dependency>
 
