@@ -21,12 +21,12 @@ import org.springframework.web.servlet.ModelAndView
 
 @RunWith(SpringRunner::class)
 @SpringBootTest(classes = arrayOf(KD4SMTApplication::class))
-class StandartControllerTest {
+class StandardControllerTest {
 
     @Autowired
     lateinit var context: WebApplicationContext
 
-    val mvc: MockMvc  by lazy {
+    val mvc: MockMvc by lazy {
         MockMvcBuilders.webAppContextSetup(context).build()
     }
 
