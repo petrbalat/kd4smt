@@ -52,7 +52,7 @@ class DslControllerTest : MockMvcProvider {
     }
 
     @Test
-    fun helloGet2() = performGet("/hello?name=Petr") {
+    fun helloGetExpression() = performGet("/hello?name=Petr") {
         expectStatus {
             isOk
         }
