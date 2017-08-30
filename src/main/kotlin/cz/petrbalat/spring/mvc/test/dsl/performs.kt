@@ -8,10 +8,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import java.net.URI
 
 //GET
-fun MockMvc.performGet(url:String, vararg uriVars:Any,
+fun MockMvc.performGet(url:String, 
                        requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
                        init: ResultActions.() -> Unit): MvcResult {
-    val request = MockMvcRequestBuilders.get(url, uriVars)
+    val request = MockMvcRequestBuilders.get(url)
     request.requestInit()
     val perform = this.perform(request)
     perform.init()
@@ -29,10 +29,10 @@ fun MockMvc.performGet(uri: URI,
 }
 
 //POST
-fun MockMvc.performPost(url:String, vararg uriVars:Any,
+fun MockMvc.performPost(url:String, 
                         requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
                         init: ResultActions.() -> Unit): MvcResult {
-    val request = MockMvcRequestBuilders.post(url, uriVars)
+    val request = MockMvcRequestBuilders.post(url)
     request.requestInit()
 
     val perform = this.perform(request)
@@ -51,8 +51,8 @@ fun MockMvc.performPost(uri: URI,
 }
 
 //PUT
-fun MockMvc.performPut(url:String, vararg uriVars:Any, init: ResultActions.() -> Unit): MvcResult {
-    val perform = this.perform(MockMvcRequestBuilders.put(url, uriVars))
+fun MockMvc.performPut(url:String,  init: ResultActions.() -> Unit): MvcResult {
+    val perform = this.perform(MockMvcRequestBuilders.put(url))
     perform.init()
     return perform.andReturn()
 }
@@ -64,8 +64,8 @@ fun MockMvc.performPut(uri: URI, init: ResultActions.() -> Unit): MvcResult {
 }
 
 //DELETE
-fun MockMvc.performDelete(url:String, vararg uriVars:Any, init: ResultActions.() -> Unit): MvcResult {
-    val perform = this.perform(MockMvcRequestBuilders.delete(url, uriVars))
+fun MockMvc.performDelete(url:String,  init: ResultActions.() -> Unit): MvcResult {
+    val perform = this.perform(MockMvcRequestBuilders.delete(url))
     perform.init()
     return perform.andReturn()
 }
@@ -77,8 +77,8 @@ fun MockMvc.performDelete(uri: URI, init: ResultActions.() -> Unit): MvcResult {
 }
 
 //HEAD
-fun MockMvc.performHead(url:String, vararg uriVars:Any, init: ResultActions.() -> Unit): MvcResult {
-    val perform = this.perform(MockMvcRequestBuilders.head(url, uriVars))
+fun MockMvc.performHead(url:String,  init: ResultActions.() -> Unit): MvcResult {
+    val perform = this.perform(MockMvcRequestBuilders.head(url))
     perform.init()
     return perform.andReturn()
 }
@@ -90,8 +90,8 @@ fun MockMvc.performHead(uri: URI, init: ResultActions.() -> Unit): MvcResult {
 }
 
 //PATCH
-fun MockMvc.performPatch(url:String, vararg uriVars:Any, init: ResultActions.() -> Unit): MvcResult {
-    val perform = this.perform(MockMvcRequestBuilders.patch(url, uriVars))
+fun MockMvc.performPatch(url:String,  init: ResultActions.() -> Unit): MvcResult {
+    val perform = this.perform(MockMvcRequestBuilders.patch(url))
     perform.init()
     return perform.andReturn()
 }
@@ -103,8 +103,8 @@ fun MockMvc.performPatch(uri: URI, init: ResultActions.() -> Unit): MvcResult {
 }
 
 //OPTIONS
-fun MockMvc.performOptions(url:String, vararg uriVars:Any, init: ResultActions.() -> Unit): MvcResult {
-    val perform = this.perform(MockMvcRequestBuilders.options(url, uriVars))
+fun MockMvc.performOptions(url:String,  init: ResultActions.() -> Unit): MvcResult {
+    val perform = this.perform(MockMvcRequestBuilders.options(url))
     perform.init()
     return perform.andReturn()
 }

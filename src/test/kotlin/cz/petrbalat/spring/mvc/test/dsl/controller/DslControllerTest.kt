@@ -47,7 +47,7 @@ class DslControllerTest : MockMvcProvider {
     }
 
     @Test
-    fun helloGetExpression() = performGet("/hello?name=Petr") {
+    fun helloGetExpression() = performGet(createUri("/hello?name={0}", "Petr")) {
         expectStatus { isOk }
         expectContent { contentTypeCompatibleWith(MediaType.TEXT_HTML) }
         expectViewName("hello")
@@ -68,7 +68,7 @@ class DslControllerTest : MockMvcProvider {
     }
 
     @Test
-    fun helloPost() = performPost("/hello", requestInit = {
+    fun helloPost() = performPost("/hello", {
         contentType(MediaType.APPLICATION_FORM_URLENCODED)
         param("surname", "Balat")
     }) {

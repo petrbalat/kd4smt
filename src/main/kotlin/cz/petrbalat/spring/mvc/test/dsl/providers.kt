@@ -12,10 +12,10 @@ interface MockMvcProvider {
 }
 
 //GET
-fun MockMvcProvider.performGet(url:String, vararg uriVars:Any,
+fun MockMvcProvider.performGet(url:String, 
                                requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
                                init: ResultActions.() -> Unit) {
-    this.mockMvc.performGet(url = url, uriVars = uriVars, requestInit = requestInit, init = init)
+    this.mockMvc.performGet(url = url, requestInit = requestInit, init = init)
 }
 
 fun MockMvcProvider.performGet(uri: URI,
@@ -25,10 +25,10 @@ fun MockMvcProvider.performGet(uri: URI,
 }
 
 //POST
-fun MockMvcProvider.performPost(url:String, vararg uriVars:Any,
+fun MockMvcProvider.performPost(url:String, 
                         requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
                         init: ResultActions.() -> Unit) {
-    this.mockMvc.performPost(url = url, uriVars = uriVars, requestInit = requestInit, init = init)
+    this.mockMvc.performPost(url = url, requestInit = requestInit, init = init)
 }
 
 fun MockMvcProvider.performPost(uri: URI,
@@ -38,8 +38,8 @@ fun MockMvcProvider.performPost(uri: URI,
 }
 
 //PUT
-fun MockMvcProvider.performPut(url:String, vararg uriVars:Any, init: ResultActions.() -> Unit) {
-    this.mockMvc.performPut(url = url, uriVars = uriVars, init = init)
+fun MockMvcProvider.performPut(url:String,  init: ResultActions.() -> Unit) {
+    this.mockMvc.performPut(url = url, init = init)
 }
 
 fun MockMvcProvider.performPut(uri: URI, init: ResultActions.() -> Unit) {
@@ -47,8 +47,8 @@ fun MockMvcProvider.performPut(uri: URI, init: ResultActions.() -> Unit) {
 }
 
 //DELETE
-fun MockMvcProvider.performDelete(url:String, vararg uriVars:Any, init: ResultActions.() -> Unit) {
-    this.mockMvc.performDelete(url = url, uriVars = uriVars, init = init)
+fun MockMvcProvider.performDelete(url:String,  init: ResultActions.() -> Unit) {
+    this.mockMvc.performDelete(url = url, init = init)
 }
 
 fun MockMvcProvider.performDelete(uri: URI, init: ResultActions.() -> Unit) {
@@ -56,8 +56,8 @@ fun MockMvcProvider.performDelete(uri: URI, init: ResultActions.() -> Unit) {
 }
 
 //HEAD
-fun MockMvcProvider.performHead(url:String, vararg uriVars:Any, init: ResultActions.() -> Unit) {
-    this.mockMvc.performHead(url = url, uriVars = uriVars, init = init)
+fun MockMvcProvider.performHead(url:String,  init: ResultActions.() -> Unit) {
+    this.mockMvc.performHead(url = url, init = init)
 }
 
 fun MockMvcProvider.performHead(uri: URI, init: ResultActions.() -> Unit) {
@@ -65,8 +65,8 @@ fun MockMvcProvider.performHead(uri: URI, init: ResultActions.() -> Unit) {
 }
 
 //PATCH
-fun MockMvcProvider.performPatch(url:String, vararg uriVars:Any, init: ResultActions.() -> Unit) {
-    this.mockMvc.performPatch(url = url, uriVars = uriVars, init = init)
+fun MockMvcProvider.performPatch(url:String,  init: ResultActions.() -> Unit) {
+    this.mockMvc.performPatch(url = url, init = init)
 }
 
 fun MockMvcProvider.performPatch(uri: URI, init: ResultActions.() -> Unit) {
@@ -74,8 +74,8 @@ fun MockMvcProvider.performPatch(uri: URI, init: ResultActions.() -> Unit) {
 }
 
 //OPTIONS
-fun MockMvcProvider.performOptions(url:String, vararg uriVars:Any, init: ResultActions.() -> Unit) {
-    this.mockMvc.performOptions(url = url, uriVars = uriVars, init = init)
+fun MockMvcProvider.performOptions(url:String,  init: ResultActions.() -> Unit) {
+    this.mockMvc.performOptions(url = url, init = init)
 }
 
 fun MockMvcProvider.performOptions(uri: URI, init: ResultActions.() -> Unit) {
