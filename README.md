@@ -139,7 +139,7 @@ repositories {
     
 ...
 
-testCompile "cz.petrbalat:kd4smt:0.2.1"
+testCompile "cz.petrbalat:kd4smt:0.3.2"
 ```
 
 Maven:
@@ -147,7 +147,7 @@ Maven:
 <dependency>
     <groupId>cz.petrbalat</groupId>
     <artifactId>kd4smt</artifactId>
-    <version>0.2.1</version>
+    <version>0.3.2</version>
     <scope>test</scope>
 </dependency>
 
