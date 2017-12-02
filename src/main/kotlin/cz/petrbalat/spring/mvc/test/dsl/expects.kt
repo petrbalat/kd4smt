@@ -31,6 +31,16 @@ fun <T> ResultActions.expectModel(name: String, modelInit: T.() -> Unit): Result
     })
 }
 
+fun ResultActions.expectRedirectedUrl(expectedUrl: String): ResultActions {
+    val header = MockMvcResultMatchers.redirectedUrl(expectedUrl)
+    return this.andExpect(header)
+}
+
+fun ResultActions.expectRedirectedUrlPattern(redirectedUrlPattern: String): ResultActions {
+    val header = MockMvcResultMatchers.redirectedUrl(redirectedUrlPattern)
+    return this.andExpect(header)
+}
+
 fun ResultActions.expectHeader(headerInit: HeaderResultMatchers.() -> ResultMatcher): ResultActions {
     val header = MockMvcResultMatchers.header().headerInit()
     return this.andExpect(header)
