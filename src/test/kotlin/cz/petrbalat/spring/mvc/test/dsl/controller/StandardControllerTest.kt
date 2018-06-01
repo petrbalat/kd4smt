@@ -19,7 +19,7 @@ import org.springframework.web.context.WebApplicationContext
 import org.springframework.web.servlet.ModelAndView
 
 @RunWith(SpringRunner::class)
-@SpringBootTest(classes = arrayOf(KD4SMTApplication::class))
+@SpringBootTest(classes = [KD4SMTApplication::class])
 class StandardControllerTest {
 
     @Autowired
@@ -41,7 +41,7 @@ class StandardControllerTest {
                 .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
         val result: MvcResult = actions.andReturn()
 
-        val modelAndView: ModelAndView = result.modelAndView
+        val modelAndView: ModelAndView = result.modelAndView!!
         assertEquals("hello", modelAndView.viewName)
         assertEquals(1, modelAndView.model.size)
         assertEquals("Petr", modelAndView.model["name"])
@@ -58,7 +58,7 @@ class StandardControllerTest {
                 .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
         val result: MvcResult = actions.andReturn()
 
-        val modelAndView: ModelAndView = result.modelAndView
+        val modelAndView: ModelAndView = result.modelAndView!!
         assertEquals("hello", modelAndView.viewName)
         assertEquals(2, modelAndView.model.size)//helloPostDto and bindingResult
         assertEquals("Balat", (modelAndView.model["helloPostDto"] as HelloPostDto).surname)

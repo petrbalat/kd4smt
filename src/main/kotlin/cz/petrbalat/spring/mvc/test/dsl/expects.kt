@@ -26,7 +26,7 @@ fun ResultActions.expectModel(modelInit: ModelResultMatchers.() -> ResultMatcher
 
 fun <T> ResultActions.expectModel(name: String, modelInit: T.() -> Unit): ResultActions {
     return this.andExpect({ mvcResult ->
-        val model = mvcResult.modelAndView.model[name] as T?
+        val model = mvcResult.modelAndView?.model?.get(name) as T?
         model?.modelInit()
     })
 }
