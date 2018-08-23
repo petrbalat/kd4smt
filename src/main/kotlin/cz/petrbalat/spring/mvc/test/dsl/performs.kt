@@ -7,110 +7,104 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import java.net.URI
 
+
 //GET
 fun MockMvc.performGet(url:String, 
                        requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
                        init: ResultActions.() -> Unit): MvcResult {
-    val request = MockMvcRequestBuilders.get(url)
-    request.requestInit()
-    val perform = this.perform(request)
-    perform.init()
-    return perform.andReturn()
+    return performDsl(this, MockMvcRequestBuilders.get(url), requestInit, init)
 }
 
 fun MockMvc.performGet(uri: URI,
                        requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
                        init: ResultActions.() -> Unit): MvcResult {
-    val request = MockMvcRequestBuilders.get(uri)
-    request.requestInit()
-    val perform = this.perform(request)
-    perform.init()
-    return perform.andReturn()
+    return performDsl(this, MockMvcRequestBuilders.get(uri), requestInit, init)
 }
 
 //POST
 fun MockMvc.performPost(url:String, 
                         requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
                         init: ResultActions.() -> Unit): MvcResult {
-    val request = MockMvcRequestBuilders.post(url)
-    request.requestInit()
-
-    val perform = this.perform(request)
-    perform.init()
-    return perform.andReturn()
+    return performDsl(this, MockMvcRequestBuilders.post(url), requestInit, init)
 }
 
 fun MockMvc.performPost(uri: URI,
                         requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
                         init: ResultActions.() -> Unit): MvcResult {
-    val request = MockMvcRequestBuilders.post(uri)
-    request.requestInit()
-    val perform = this.perform(request)
-    perform.init()
-    return perform.andReturn()
+    return performDsl(this, MockMvcRequestBuilders.post(uri), requestInit, init)
 }
 
 //PUT
-fun MockMvc.performPut(url:String,  init: ResultActions.() -> Unit): MvcResult {
-    val perform = this.perform(MockMvcRequestBuilders.put(url))
-    perform.init()
-    return perform.andReturn()
+fun MockMvc.performPut(url:String,
+                       requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
+                       init: ResultActions.() -> Unit): MvcResult {
+    return performDsl(this, MockMvcRequestBuilders.put(url), requestInit, init)
 }
 
-fun MockMvc.performPut(uri: URI, init: ResultActions.() -> Unit): MvcResult {
-    val perform = this.perform(MockMvcRequestBuilders.put(uri))
-    perform.init()
-    return perform.andReturn()
+fun MockMvc.performPut(uri: URI,
+                       requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
+                       init: ResultActions.() -> Unit): MvcResult {
+    return performDsl(this, MockMvcRequestBuilders.put(uri), requestInit, init)
 }
 
 //DELETE
-fun MockMvc.performDelete(url:String,  init: ResultActions.() -> Unit): MvcResult {
-    val perform = this.perform(MockMvcRequestBuilders.delete(url))
-    perform.init()
-    return perform.andReturn()
+fun MockMvc.performDelete(url:String,
+                          requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
+                          init: ResultActions.() -> Unit): MvcResult {
+    return performDsl(this, MockMvcRequestBuilders.delete(url), requestInit, init)
 }
 
-fun MockMvc.performDelete(uri: URI, init: ResultActions.() -> Unit): MvcResult {
-    val perform = this.perform(MockMvcRequestBuilders.delete(uri))
-    perform.init()
-    return perform.andReturn()
+fun MockMvc.performDelete(uri: URI,
+                          requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
+                          init: ResultActions.() -> Unit): MvcResult {
+    return performDsl(this, MockMvcRequestBuilders.delete(uri), requestInit, init)
 }
 
 //HEAD
-fun MockMvc.performHead(url:String,  init: ResultActions.() -> Unit): MvcResult {
-    val perform = this.perform(MockMvcRequestBuilders.head(url))
-    perform.init()
-    return perform.andReturn()
+fun MockMvc.performHead(url:String,
+                        requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
+                        init: ResultActions.() -> Unit): MvcResult {
+    return performDsl(this, MockMvcRequestBuilders.head(url), requestInit, init)
 }
 
-fun MockMvc.performHead(uri: URI, init: ResultActions.() -> Unit): MvcResult {
-    val perform = this.perform(MockMvcRequestBuilders.head(uri))
-    perform.init()
-    return perform.andReturn()
+fun MockMvc.performHead(uri: URI,
+                        requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
+                        init: ResultActions.() -> Unit): MvcResult {
+    return performDsl(this, MockMvcRequestBuilders.head(uri), requestInit, init)
 }
 
 //PATCH
-fun MockMvc.performPatch(url:String,  init: ResultActions.() -> Unit): MvcResult {
-    val perform = this.perform(MockMvcRequestBuilders.patch(url))
-    perform.init()
-    return perform.andReturn()
+fun MockMvc.performPatch(url:String,
+                         requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
+                         init: ResultActions.() -> Unit): MvcResult {
+    return performDsl(this, MockMvcRequestBuilders.patch(url), requestInit, init)
 }
 
-fun MockMvc.performPatch(uri: URI, init: ResultActions.() -> Unit): MvcResult {
-    val perform = this.perform(MockMvcRequestBuilders.patch(uri))
-    perform.init()
-    return perform.andReturn()
+fun MockMvc.performPatch(uri: URI,
+                         requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
+                         init: ResultActions.() -> Unit): MvcResult {
+    return performDsl(this, MockMvcRequestBuilders.patch(uri), requestInit, init)
 }
 
 //OPTIONS
-fun MockMvc.performOptions(url:String,  init: ResultActions.() -> Unit): MvcResult {
-    val perform = this.perform(MockMvcRequestBuilders.options(url))
-    perform.init()
-    return perform.andReturn()
+fun MockMvc.performOptions(url:String,
+                           requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
+                           init: ResultActions.() -> Unit): MvcResult {
+    return performDsl(this, MockMvcRequestBuilders.options(url), requestInit, init)
 }
 
-fun MockMvc.performOptions(uri: URI, init: ResultActions.() -> Unit): MvcResult {
-    val perform = this.perform(MockMvcRequestBuilders.options(uri))
+fun MockMvc.performOptions(uri: URI,
+                           requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
+                           init: ResultActions.() -> Unit): MvcResult {
+    return performDsl(this, MockMvcRequestBuilders.options(uri), requestInit, init)
+}
+
+private fun performDsl(mockMvc: MockMvc,
+                       request: MockHttpServletRequestBuilder,
+                       requestInit: MockHttpServletRequestBuilder.() -> Unit,
+                       init: ResultActions.() -> Unit): MvcResult {
+    request.requestInit()
+    val perform = mockMvc.perform(request)
     perform.init()
     return perform.andReturn()
 }
