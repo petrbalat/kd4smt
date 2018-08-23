@@ -25,10 +25,10 @@ fun ResultActions.expectModel(modelInit: ModelResultMatchers.() -> ResultMatcher
 }
 
 fun <T> ResultActions.expectModel(name: String, modelInit: T.() -> Unit): ResultActions {
-    return this.andExpect({ mvcResult ->
+    return this.andExpect { mvcResult ->
         val model = mvcResult.modelAndView?.model?.get(name) as T?
         model?.modelInit()
-    })
+    }
 }
 
 fun ResultActions.expectRedirectedUrl(expectedUrl: String): ResultActions {
@@ -62,6 +62,6 @@ fun ResultActions.expectXPath(expression:String, vararg args:Any, xpatInit: Xpat
 }
 
 fun ResultActions.expectCookie(cookieInit: CookieResultMatchers.() -> ResultMatcher): ResultActions {
-    val cokie = MockMvcResultMatchers.cookie().cookieInit()
-    return this.andExpect(cokie)
+    val cookie = MockMvcResultMatchers.cookie().cookieInit()
+    return this.andExpect(cookie)
 }
