@@ -2,17 +2,21 @@ package cz.petrbalat.spring.mvc.test.dsl.controller
 
 import cz.petrbalat.spring.mvc.test.dsl.*
 import org.junit.Assert.assertEquals
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
-import org.springframework.test.context.junit4.SpringRunner
+import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
+import javax.servlet.http.Cookie
 
-@RunWith(SpringRunner::class)
+@ExtendWith(SpringExtension::class)
+@ActiveProfiles("test")
 @SpringBootTest(classes = [KD4SMTApplication::class])
 class DslControllerTest : MockMvcProvider {
 
@@ -92,6 +96,31 @@ class DslControllerTest : MockMvcProvider {
         expectXPath("""//span[@class="name"]""") {
             nodeCount(1)
             string("Balat")
+        }
+    }
+
+    @Test
+    fun `hello put with required parameters of method and url`() {
+        mockMvc.request(HttpMethod.PUT, "/hello") {
+            builder {
+                contentType(MediaType.APPLICATION_JSON)
+                content("""{"surname": "Jack"}""")
+                cookie(Cookie("cookieName", "Extra Things"))
+            }
+            printRequestAndResponse()
+
+            expect {
+                status { isBadRequest }
+            }
+            expect { "$.surname" jsonPathIs "Jack" } //builder,actions, and expects can be called multiple times
+        }
+    }
+
+    @Test
+    fun `minimal call, builder, and expectation`() {
+        mockMvc.request(HttpMethod.GET, "/hello") {
+            builder { param("name", "world") }
+            expect { status { isOk } }
         }
     }
 }
