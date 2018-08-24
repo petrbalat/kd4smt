@@ -102,28 +102,28 @@ class MockMvcDslBuilder(internal var url: String? = null,
 @RequestDsl
 class DslRequestBuilder(internal var url: String? = null,
                         internal var requestBuilder: MockHttpServletRequestBuilder? = null,
-                        internal var requestBuilders: List<MockHttpServletRequestBuilder.() -> Unit> = listOf(),
-                        internal var rawActions: List<ResultActions.() -> Unit> = listOf(),
-                        internal var expects: List<DslExpectationBuilder.() -> Unit> = listOf()) {
+                        internal val requestBuilders: MutableList<MockHttpServletRequestBuilder.() -> Unit> = mutableListOf(),
+                        internal val rawActions: MutableList<ResultActions.() -> Unit> = mutableListOf(),
+                        internal val expects: MutableList<DslExpectationBuilder.() -> Unit> = mutableListOf()) {
 
     fun printRequestAndResponse() {
         actions { andDo(print()) }
     }
 
     fun request(block: MockHttpServletRequestBuilder.() -> Unit) {
-        requestBuilders + block
+        requestBuilders.add(block)
     }
 
     fun builder(block: MockHttpServletRequestBuilder.() -> Unit) {
-        requestBuilders + block
+        requestBuilders.add(block)
     }
 
     fun expect(block: DslExpectationBuilder.() -> Unit) {
-        this.expects + block
+        this.expects.add(block)
     }
 
     fun actions(block: ResultActions.() -> Unit) {
-        this.rawActions + block
+        this.rawActions.add(block)
     }
 
     fun applyResult(result: ResultActions): ResultActions {
