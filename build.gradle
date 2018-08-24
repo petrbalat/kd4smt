@@ -59,6 +59,23 @@ dependencies {
     compileOnly ('org.springframework:spring-test')
     compileOnly ('org.springframework:spring-webmvc')
     testCompile('org.springframework.boot:spring-boot-starter-test')
+
+    testCompile('org.junit.jupiter:junit-jupiter-api:5.2.0')
+    testRuntime('org.junit.jupiter:junit-jupiter-engine:5.2.0')
+
+}
+
+
+test {
+    useJUnitPlatform()
+
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+
+    reports {
+        html.enabled = true
+    }
 }
 
 apply plugin: 'maven'
