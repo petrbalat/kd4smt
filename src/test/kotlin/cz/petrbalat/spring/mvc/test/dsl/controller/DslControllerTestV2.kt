@@ -28,8 +28,9 @@ class DslControllerTestV2Test {
     lateinit var mockMvc: MockMvc
 
     @Test
-    fun helloGet() {
-        mockMvc.request { PUT("/hello") {
+    fun `hello put dsl example, using invoke on HttpMethod`() {
+        mockMvc.request {
+            PUT("/hello") {
                 builder {
                     contentType(MediaType.APPLICATION_JSON)
                     content("""{"surname": "Jack"}""")
@@ -48,7 +49,10 @@ class DslControllerTestV2Test {
                 }
             }
         }
+    }
 
+    @Test
+    fun `hello put with required parameters of method and url`() {
 
         mockMvc.request(PUT, "/hello") {
             builder {
@@ -62,7 +66,15 @@ class DslControllerTestV2Test {
                 status { isBadRequest }
                 "$.surname" jsonPath "Jack"
             }
-            expect { status {isOk}} //builder,actions, and expects can be called multiple times
+            expect { status { isOk } } //builder,actions, and expects can be called multiple times
+        }
+    }
+
+    @Test
+    fun `minimal call, builder, and expectation`() {
+        mockMvc.request(GET, "/hello") {
+            builder { param("name", "world") }
+            expect { status { isOk } }
         }
     }
 
