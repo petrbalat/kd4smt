@@ -13,38 +13,12 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import javax.servlet.http.Cookie
 
-@ExtendWith(SpringExtension::class)
-@WebMvcTest(HelloController::class)
-@ActiveProfiles("test")
 class DslControllerTestV2Test {
 
     @Autowired
     lateinit var mockMvc: MockMvc
 
-    @Test
-    fun `hello put with required parameters of method and url`() {
-        mockMvc.request(PUT, "/hello") {
-            builder {
-                contentType(MediaType.APPLICATION_JSON)
-                content("""{"surname": "Jack"}""")
-                cookie(Cookie("cookieName", "Extra Things"))
-            }
-            printRequestAndResponse()
 
-            expect {
-                status { isBadRequest }
-            }
-            expect { "$.surname" jsonPathIs "Jack" } //builder,actions, and expects can be called multiple times
-        }
-    }
-
-    @Test
-    fun `minimal call, builder, and expectation`() {
-        mockMvc.request(GET, "/hello") {
-            builder { param("name", "world") }
-            expect { status { isOk } }
-        }
-    }
 
 
 }

@@ -19,7 +19,7 @@ class HelloController {
     fun helloJson(@PathVariable name: String) = HelloPostDto(surname = name)
 
     @PostMapping("/hello")
-    fun helloPost(dto: HelloPostDto, modelMap: ModelMap): String = "Hello ${dto.surname}"
+    fun helloPost(dto: HelloPostDto, modelMap: ModelMap): String = "hello"
 
     @PutMapping("/hello")
     @ResponseBody
