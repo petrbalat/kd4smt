@@ -1,22 +1,16 @@
 package cz.petrbalat.spring.mvc.test.dsl.controller
 
-import cz.petrbalat.spring.mvc.test.dsl.*
-import org.hamcrest.CoreMatchers.`is`
+import cz.petrbalat.spring.mvc.test.dsl.request
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.http.HttpMethod
-import org.springframework.http.HttpMethod.*
+import org.springframework.http.HttpMethod.GET
+import org.springframework.http.HttpMethod.PUT
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
-import org.springframework.test.web.servlet.*
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers.*
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
-import org.springframework.test.web.servlet.result.StatusResultMatchers
+import org.springframework.test.web.servlet.MockMvc
 import javax.servlet.http.Cookie
 
 @ExtendWith(SpringExtension::class)
@@ -28,32 +22,7 @@ class DslControllerTestV2Test {
     lateinit var mockMvc: MockMvc
 
     @Test
-    fun `hello put dsl example, using invoke on HttpMethod`() {
-        mockMvc.request {
-            PUT("/hello") {
-                builder {
-                    contentType(MediaType.APPLICATION_JSON)
-                    content("""{"surname": "Jack"}""")
-                    cookie(Cookie("cookieName", "Extra Things"))
-                }
-                printRequestAndResponse()
-
-                expect {
-                    status { isBadRequest }
-                    "$.surname" jsonPath "Jack"
-                }
-
-                actions {
-                    andDo(print())
-                    expectContent { contentTypeCompatibleWith(MediaType.APPLICATION_JSON) }
-                }
-            }
-        }
-    }
-
-    @Test
     fun `hello put with required parameters of method and url`() {
-
         mockMvc.request(PUT, "/hello") {
             builder {
                 contentType(MediaType.APPLICATION_JSON)
@@ -64,9 +33,8 @@ class DslControllerTestV2Test {
 
             expect {
                 status { isBadRequest }
-                "$.surname" jsonPath "Jack"
             }
-            expect { status { isOk } } //builder,actions, and expects can be called multiple times
+            expect { "$.surname" jsonPathIs "Jack" } //builder,actions, and expects can be called multiple times
         }
     }
 
@@ -78,91 +46,5 @@ class DslControllerTestV2Test {
         }
     }
 
-
-}
-
-@DslMarker
-annotation class RequestDsl
-
-@DslMarker
-annotation class ResultDsl
-
-fun MockMvc.request(method:HttpMethod, url:String, block: DslRequestBuilder.() -> Unit = {}): MvcResult {
-    val request = DslRequestBuilder(url,MockMvcRequestBuilders.request(method, url)).apply(block)
-    val result = this.perform(request.buildRequest())
-    return request.applyResult(result).andReturn()
-}
-
-fun MockMvc.request(block: MockMvcDslBuilder.() -> Unit = {}): MvcResult {
-    val request = MockMvcDslBuilder().apply(block).requestBuilder
-    val result = this.perform(request.buildRequest())
-    return request.applyResult(result).andReturn()
-}
-
-
-// ===== Root Builders ===== //
-@RequestDsl
-class MockMvcDslBuilder(internal var url: String? = null,
-                        internal var requestBuilder: DslRequestBuilder = DslRequestBuilder(url)) {
-    operator fun HttpMethod.invoke(url: String? = null, block: DslRequestBuilder.() -> Unit) {
-        val req = requestBuilder.apply(block)
-        req.requestBuilder = MockMvcRequestBuilders.request(this, url ?: req.url ?: throw IllegalArgumentException("Url wasn't set"))
-
-    }
-}
-
-@RequestDsl
-class DslRequestBuilder(internal var url: String? = null,
-                        internal var requestBuilder: MockHttpServletRequestBuilder? = null,
-                        internal val requestBuilders: MutableList<MockHttpServletRequestBuilder.() -> Unit> = mutableListOf(),
-                        internal val rawActions: MutableList<ResultActions.() -> Unit> = mutableListOf(),
-                        internal val expects: MutableList<DslExpectationBuilder.() -> Unit> = mutableListOf()) {
-
-    fun printRequestAndResponse() {
-        actions { andDo(print()) }
-    }
-
-    fun request(block: MockHttpServletRequestBuilder.() -> Unit) {
-        requestBuilders.add(block)
-    }
-
-    fun builder(block: MockHttpServletRequestBuilder.() -> Unit) {
-        requestBuilders.add(block)
-    }
-
-    fun expect(block: DslExpectationBuilder.() -> Unit) {
-        this.expects.add(block)
-    }
-
-    fun actions(block: ResultActions.() -> Unit) {
-        this.rawActions.add(block)
-    }
-
-    fun applyResult(result: ResultActions): ResultActions {
-        rawActions.forEach { result.apply(it) }
-        val expectationBuild = DslExpectationBuilder(result)
-        expects.forEach { expectationBuild.apply(it) }
-        return result
-    }
-
-    fun buildRequest(): RequestBuilder {
-        if(requestBuilder != null) {
-            requestBuilders.forEach { requestBuilder?.apply(it) }
-        }
-      return requestBuilder ?: throw IllegalArgumentException("Builder wasn't created (report potential DSL bug)")
-    }
-}
-
-@ResultDsl
-class DslExpectationBuilder(val actions: ResultActions) {
-
-    fun status(statusInit: StatusResultMatchers.() -> ResultMatcher){
-        val status = MockMvcResultMatchers.status().statusInit()
-        actions.andExpect(status)
-    }
-
-    infix fun String.jsonPath(value: String) {
-        actions.andExpect(MockMvcResultMatchers.jsonPath(this, `is`(value)))
-    }
 
 }
