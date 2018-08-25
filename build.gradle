@@ -1,7 +1,7 @@
 buildscript {
     ext {
-        kotlinVersion = '1.2.41'
-        springBootVersion = '2.0.2.RELEASE'
+        kotlinVersion = '1.2.61'
+        springBootVersion = '2.0.4.RELEASE'
     }
     repositories {
         mavenLocal()
@@ -28,15 +28,15 @@ bootJar {
     classifier = 'boot'
 }
 
-version = '0.4.3'
+version = '0.5.0'
 sourceCompatibility = 1.8
 compileKotlin {
     kotlinOptions.jvmTarget = "1.8"
-    kotlinOptions.freeCompilerArgs = ["-Xjsr305=strict"]
+    kotlinOptions.freeCompilerArgs = ["-Xjsr305=strict", "-Xjvm-default=enable", "-Xprogressive"]
 }
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
-    kotlinOptions.freeCompilerArgs = ["-Xjsr305=strict"]
+    kotlinOptions.freeCompilerArgs = ["-Xjsr305=strict", "-Xjvm-default=enable", "-Xprogressive"]
 }
 
 repositories {
