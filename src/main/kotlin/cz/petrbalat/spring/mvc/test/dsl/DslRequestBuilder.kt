@@ -11,10 +11,13 @@ annotation class RequestDsl
 annotation class ResultDsl
 
 @RequestDsl
-class DslRequestBuilder(private val requestBuilder: MockHttpServletRequestBuilder,
-                        private val requestBuilders: MutableList<MockHttpServletRequestBuilder.() -> Unit> = mutableListOf(),
-                        private val actions: MutableList<ResultActions.() -> Unit> = mutableListOf(),
-                        private val expects: MutableList<DslExpectationBuilder.() -> Unit> = mutableListOf()) {
+class DslRequestBuilder(private val requestBuilder: MockHttpServletRequestBuilder) {
+
+    private val requestBuilders: MutableList<MockHttpServletRequestBuilder.() -> Unit> = mutableListOf()
+
+    private val actions: MutableList<ResultActions.() -> Unit> = mutableListOf()
+
+    private val expects: MutableList<DslExpectationBuilder.() -> Unit> = mutableListOf()
 
     fun printRequestAndResponse() {
         actions { andDo(MockMvcResultHandlers.print()) }
