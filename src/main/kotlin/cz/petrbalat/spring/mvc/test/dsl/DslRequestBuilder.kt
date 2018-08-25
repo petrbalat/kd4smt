@@ -46,51 +46,63 @@ class DslRequestBuilder(private val requestBuilder: MockHttpServletRequestBuilde
         return result
     }
 
-    fun expectStatus(statusInit: StatusResultMatchers.() -> ResultMatcher) {
+    fun expectStatus(statusInit: StatusResultMatchers.() -> ResultMatcher): DslRequestBuilder {
         expect { status(statusInit) }
+        return this
     }
 
-    fun expectContent(contentInit: ContentResultMatchers.() -> ResultMatcher) {
+    fun expectContent(contentInit: ContentResultMatchers.() -> ResultMatcher): DslRequestBuilder {
         expect { content(contentInit) }
+        return this
     }
 
-    fun expectViewName(viewName: String) {
-        return expect {viewName(viewName)}
+    fun expectViewName(viewName: String): DslRequestBuilder {
+        expect {viewName(viewName)}
+        return this
     }
 
-    fun expectModel(modelInit: ModelResultMatchers.() -> ResultMatcher) {
+    fun expectModel(modelInit: ModelResultMatchers.() -> ResultMatcher): DslRequestBuilder {
         expect { model(modelInit) }
+        return this
     }
 
-    fun <T> expectModel(name: String, modelInit: T.() -> Unit) {
-        expect { model<T>(name, modelInit) }
+    fun <T> expectModel(name: String, modelInit: T.() -> Unit): DslRequestBuilder {
+        expect { model(name, modelInit) }
+        return this
     }
 
-    fun expectRedirectedUrl(expectedUrl: String) {
+    fun expectRedirectedUrl(expectedUrl: String): DslRequestBuilder {
         expect { redirectedUrl(expectedUrl)}
+        return this
     }
 
-    fun expectRedirectedUrlPattern(redirectedUrlPattern: String) {
+    fun expectRedirectedUrlPattern(redirectedUrlPattern: String): DslRequestBuilder {
         expect { redirectedUrlPattern(redirectedUrlPattern) }
+        return this
     }
 
-    fun expectHeader(headerInit: HeaderResultMatchers.() -> ResultMatcher) {
+    fun expectHeader(headerInit: HeaderResultMatchers.() -> ResultMatcher): DslRequestBuilder {
         expect { header(headerInit) }
+        return this
     }
 
-    fun expectFlash(flashInit: FlashAttributeResultMatchers.() -> ResultMatcher) {
+    fun expectFlash(flashInit: FlashAttributeResultMatchers.() -> ResultMatcher): DslRequestBuilder {
         expect { flash(flashInit) }
+        return this
     }
 
-    fun expectJsonPath(expression:String, vararg args:Any, jsonInit: JsonPathResultMatchers.() -> ResultMatcher) {
+    fun expectJsonPath(expression:String, vararg args:Any, jsonInit: JsonPathResultMatchers.() -> ResultMatcher): DslRequestBuilder {
         expect { jsonPath(expression, args = *arrayOf(args), jsonInit = jsonInit) }
+        return this
     }
 
-    fun expectXPath(expression:String, vararg args:Any, xpatInit: XpathResultMatchers.() -> ResultMatcher) {
+    fun expectXPath(expression:String, vararg args:Any, xpatInit: XpathResultMatchers.() -> ResultMatcher): DslRequestBuilder {
         expect { xPath(expression, args = *arrayOf(args), xpatInit = xpatInit) }
+        return this
     }
 
-    fun expectCookie(cookieInit: CookieResultMatchers.() -> ResultMatcher) {
+    fun expectCookie(cookieInit: CookieResultMatchers.() -> ResultMatcher): DslRequestBuilder {
         expect { cookie(cookieInit) }
+        return this
     }
 }

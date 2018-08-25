@@ -32,7 +32,7 @@ class DslControllerTest : MockMvcProvider {
         mockMvc.performGet("/hello?name=Petr") {
             expectStatus { isOk }
             expectContent { contentTypeCompatibleWith(MediaType.TEXT_HTML) }
-            expectViewName("hello")
+            .expectViewName("hello") //chaining is supported but not really necessary
 
             expectModel {
                 size<Any>(1)
