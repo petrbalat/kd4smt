@@ -8,17 +8,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 
 
-@DslMarker
-annotation class RequestDsl
 
-@DslMarker
-annotation class ResultDsl
-
-fun MockMvc.request(method: HttpMethod, url: String, block: DslRequestBuilder.() -> Unit = {}): MvcResult {
-    val request = DslRequestBuilder(MockMvcRequestBuilders.request(method, url)).apply(block)
-    val result = this.perform(request.buildRequest())
-    return request.applyResult(result).andReturn()
-}
 
 fun MockHttpServletRequestBuilder.jsonContent(jsonContent: String) {
     content(jsonContent)

@@ -72,17 +72,10 @@ class DslControllerTest : MockMvcProvider {
     }
 
     @Test
-    fun helloPost() = performPost("/hello", {
-        contentType(MediaType.APPLICATION_FORM_URLENCODED)
-        param("surname", "Balat")
-    }) {
-        expectStatus { isOk }
-        expectContent { contentTypeCompatibleWith(MediaType.TEXT_HTML) }
-        expectViewName("hello")
-
-        expectModel {
-            size<Any>(2)
-            attribute("helloPostDto", HelloPostDto("Balat"))
+    fun helloPost() = performPost("/hello") {
+        builder {
+            contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            param("surname", "Balat")
         }
 
         expectModel<HelloPostDto>("helloPostDto") {
@@ -101,7 +94,7 @@ class DslControllerTest : MockMvcProvider {
 
     @Test
     fun `hello put with required parameters of method and url`() {
-        mockMvc.request(HttpMethod.PUT, "/hello") {
+        mockMvc.perform(HttpMethod.PUT, "/hello") {
             builder {
                 contentType(MediaType.APPLICATION_JSON)
                 content("""{"surname": "Jack"}""")
@@ -118,7 +111,7 @@ class DslControllerTest : MockMvcProvider {
 
     @Test
     fun `minimal call, builder, and expectation`() {
-        mockMvc.request(HttpMethod.GET, "/hello") {
+        mockMvc.perform(HttpMethod.GET, "/hello") {
             builder { param("name", "world") }
             expect { status { isOk } }
         }
