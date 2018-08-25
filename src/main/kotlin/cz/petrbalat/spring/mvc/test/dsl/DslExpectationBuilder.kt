@@ -1,61 +1,10 @@
 package cz.petrbalat.spring.mvc.test.dsl
 
-import org.hamcrest.CoreMatchers.`is`
-import org.springframework.http.HttpMethod
+import org.hamcrest.CoreMatchers
 import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType
-import org.springframework.test.web.servlet.*
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.ResultActions
+import org.springframework.test.web.servlet.ResultMatcher
 import org.springframework.test.web.servlet.result.*
-
-
-@DslMarker
-annotation class RequestDsl
-
-@DslMarker
-annotation class ResultDsl
-
-fun MockMvc.request(method: HttpMethod, url: String, block: DslRequestBuilder.() -> Unit = {}): MvcResult {
-    val request = DslRequestBuilder(MockMvcRequestBuilders.request(method, url)).apply(block)
-    val result = this.perform(request.buildRequest())
-    return request.applyResult(result).andReturn()
-}
-
-@RequestDsl
-class DslRequestBuilder(private val requestBuilder: MockHttpServletRequestBuilder,
-                        private val requestBuilders: MutableList<MockHttpServletRequestBuilder.() -> Unit> = mutableListOf(),
-                        private val actions: MutableList<ResultActions.() -> Unit> = mutableListOf(),
-                        private val expects: MutableList<DslExpectationBuilder.() -> Unit> = mutableListOf()) {
-
-    fun printRequestAndResponse() {
-        actions { andDo(MockMvcResultHandlers.print()) }
-    }
-
-    fun builder(block: MockHttpServletRequestBuilder.() -> Unit) {
-        requestBuilders.add(block)
-    }
-
-    fun expect(block: DslExpectationBuilder.() -> Unit) {
-        this.expects.add(block)
-    }
-
-    fun actions(block: ResultActions.() -> Unit) {
-        this.actions.add(block)
-    }
-
-    fun buildRequest(): RequestBuilder {
-        requestBuilders.forEach { requestBuilder.apply(it) }
-        return requestBuilder
-    }
-
-    fun applyResult(result: ResultActions): ResultActions {
-        actions.forEach { result.apply(it) }
-        val expectationBuild = DslExpectationBuilder(result)
-        expects.forEach { expectationBuild.apply(it) }
-        return result
-    }
-}
 
 @ResultDsl
 class DslExpectationBuilder(private val actions: ResultActions) {
@@ -131,12 +80,6 @@ class DslExpectationBuilder(private val actions: ResultActions) {
     }
 
     infix fun String.jsonPathIs(value: Any) {
-        actions.andExpect(MockMvcResultMatchers.jsonPath(this, `is`(value)))
+        actions.andExpect(MockMvcResultMatchers.jsonPath(this, CoreMatchers.`is`(value)))
     }
-}
-
-fun MockHttpServletRequestBuilder.jsonContent(jsonContent: String) {
-    content(jsonContent)
-    contentType(MediaType.APPLICATION_JSON)
-    accept(MediaType.APPLICATION_JSON)
 }
