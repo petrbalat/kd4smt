@@ -2,6 +2,7 @@ package cz.petrbalat.spring.mvc.test.dsl
 
 import org.springframework.test.web.servlet.RequestBuilder
 import org.springframework.test.web.servlet.ResultActions
+import org.springframework.test.web.servlet.ResultHandler
 import org.springframework.test.web.servlet.ResultMatcher
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
 import org.springframework.test.web.servlet.result.*
@@ -103,6 +104,16 @@ class DslRequestBuilder(private val requestBuilder: MockHttpServletRequestBuilde
 
     fun expectCookie(cookieInit: CookieResultMatchers.() -> ResultMatcher): DslRequestBuilder {
         expect { cookie(cookieInit) }
+        return this
+    }
+
+    fun andDo(action: ResultHandler): DslRequestBuilder {
+        actions { andDo(action)}
+        return this
+    }
+
+    fun andExpect(action: ResultMatcher): DslRequestBuilder {
+        actions { andExpect(action)}
         return this
     }
 }

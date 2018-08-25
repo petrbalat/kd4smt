@@ -11,6 +11,10 @@ import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.ResultHandler
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers.*
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
 import javax.servlet.http.Cookie
@@ -30,9 +34,11 @@ class DslControllerTest : MockMvcProvider {
     @Test
     fun helloGet() {
         mockMvc.performGet("/hello?name=Petr") {
-            expectStatus { isOk }
+            andDo(print())
+            .andExpect(status().isOk) //legacy andDo/andExpect can still be used
+            .expectStatus { isOk } //chaining is supported but not really necessary
             expectContent { contentTypeCompatibleWith(MediaType.TEXT_HTML) }
-            .expectViewName("hello") //chaining is supported but not really necessary
+            expectViewName("hello")
 
             expectModel {
                 size<Any>(1)
