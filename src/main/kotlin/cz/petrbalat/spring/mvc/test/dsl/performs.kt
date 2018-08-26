@@ -1,5 +1,6 @@
 package cz.petrbalat.spring.mvc.test.dsl
 
+import org.springframework.http.HttpMethod
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.MvcResult
 import org.springframework.test.web.servlet.ResultActions
@@ -9,102 +10,81 @@ import java.net.URI
 
 
 //GET
-fun MockMvc.performGet(url:String, 
-                       requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
-                       init: ResultActions.() -> Unit): MvcResult {
-    return performDsl(this, MockMvcRequestBuilders.get(url), requestInit, init)
+fun MockMvc.performGet(url:String, block: DslRequestBuilder.() -> Unit = {}): MvcResult {
+    return performDsl(this, MockMvcRequestBuilders.get(url), block)
 }
 
-fun MockMvc.performGet(uri: URI,
-                       requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
-                       init: ResultActions.() -> Unit): MvcResult {
-    return performDsl(this, MockMvcRequestBuilders.get(uri), requestInit, init)
+fun MockMvc.performGet(uri: URI, block: DslRequestBuilder.() -> Unit = {}): MvcResult {
+    return performDsl(this, MockMvcRequestBuilders.get(uri), block)
 }
 
 //POST
-fun MockMvc.performPost(url:String, 
-                        requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
-                        init: ResultActions.() -> Unit): MvcResult {
-    return performDsl(this, MockMvcRequestBuilders.post(url), requestInit, init)
+fun MockMvc.performPost(url:String, block: DslRequestBuilder.() -> Unit = {}): MvcResult {
+    return performDsl(this, MockMvcRequestBuilders.post(url), block)
 }
 
-fun MockMvc.performPost(uri: URI,
-                        requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
-                        init: ResultActions.() -> Unit): MvcResult {
-    return performDsl(this, MockMvcRequestBuilders.post(uri), requestInit, init)
+fun MockMvc.performPost(uri: URI, block: DslRequestBuilder.() -> Unit = {}): MvcResult {
+    return performDsl(this, MockMvcRequestBuilders.post(uri), block)
 }
 
 //PUT
-fun MockMvc.performPut(url:String,
-                       requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
-                       init: ResultActions.() -> Unit): MvcResult {
-    return performDsl(this, MockMvcRequestBuilders.put(url), requestInit, init)
+fun MockMvc.performPut(url:String, block: DslRequestBuilder.() -> Unit = {}): MvcResult {
+    return performDsl(this, MockMvcRequestBuilders.put(url), block)
 }
 
-fun MockMvc.performPut(uri: URI,
-                       requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
-                       init: ResultActions.() -> Unit): MvcResult {
-    return performDsl(this, MockMvcRequestBuilders.put(uri), requestInit, init)
+fun MockMvc.performPut(uri: URI, block: DslRequestBuilder.() -> Unit = {}): MvcResult {
+    return performDsl(this, MockMvcRequestBuilders.put(uri), block)
 }
 
 //DELETE
-fun MockMvc.performDelete(url:String,
-                          requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
-                          init: ResultActions.() -> Unit): MvcResult {
-    return performDsl(this, MockMvcRequestBuilders.delete(url), requestInit, init)
+fun MockMvc.performDelete(url:String, block: DslRequestBuilder.() -> Unit = {}): MvcResult {
+    return performDsl(this, MockMvcRequestBuilders.delete(url), block)
 }
 
-fun MockMvc.performDelete(uri: URI,
-                          requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
-                          init: ResultActions.() -> Unit): MvcResult {
-    return performDsl(this, MockMvcRequestBuilders.delete(uri), requestInit, init)
+fun MockMvc.performDelete(uri: URI, block: DslRequestBuilder.() -> Unit = {}): MvcResult {
+    return performDsl(this, MockMvcRequestBuilders.delete(uri), block)
 }
 
 //HEAD
-fun MockMvc.performHead(url:String,
-                        requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
-                        init: ResultActions.() -> Unit): MvcResult {
-    return performDsl(this, MockMvcRequestBuilders.head(url), requestInit, init)
+fun MockMvc.performHead(url:String, block: DslRequestBuilder.() -> Unit = {}): MvcResult {
+    return performDsl(this, MockMvcRequestBuilders.head(url), block)
 }
 
-fun MockMvc.performHead(uri: URI,
-                        requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
-                        init: ResultActions.() -> Unit): MvcResult {
-    return performDsl(this, MockMvcRequestBuilders.head(uri), requestInit, init)
+fun MockMvc.performHead(uri: URI, block: DslRequestBuilder.() -> Unit = {}): MvcResult {
+    return performDsl(this, MockMvcRequestBuilders.head(uri), block)
 }
 
 //PATCH
-fun MockMvc.performPatch(url:String,
-                         requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
-                         init: ResultActions.() -> Unit): MvcResult {
-    return performDsl(this, MockMvcRequestBuilders.patch(url), requestInit, init)
+fun MockMvc.performPatch(url:String, block: DslRequestBuilder.() -> Unit = {}): MvcResult {
+    return performDsl(this, MockMvcRequestBuilders.patch(url), block)
 }
 
-fun MockMvc.performPatch(uri: URI,
-                         requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
-                         init: ResultActions.() -> Unit): MvcResult {
-    return performDsl(this, MockMvcRequestBuilders.patch(uri), requestInit, init)
+fun MockMvc.performPatch(uri: URI, block: DslRequestBuilder.() -> Unit = {}): MvcResult {
+    return performDsl(this, MockMvcRequestBuilders.patch(uri), block)
 }
 
 //OPTIONS
-fun MockMvc.performOptions(url:String,
-                           requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
-                           init: ResultActions.() -> Unit): MvcResult {
-    return performDsl(this, MockMvcRequestBuilders.options(url), requestInit, init)
+fun MockMvc.performOptions(url:String, block: DslRequestBuilder.() -> Unit = {}): MvcResult {
+    return performDsl(this, MockMvcRequestBuilders.options(url), block)
 }
 
-fun MockMvc.performOptions(uri: URI,
-                           requestInit: MockHttpServletRequestBuilder.() -> Unit = {},
-                           init: ResultActions.() -> Unit): MvcResult {
-    return performDsl(this, MockMvcRequestBuilders.options(uri), requestInit, init)
+fun MockMvc.performOptions(uri: URI, block: DslRequestBuilder.() -> Unit = {}): MvcResult {
+    return performDsl(this, MockMvcRequestBuilders.options(uri), block)
+}
+
+//REQUEST
+fun MockMvc.perform(method: HttpMethod, url: String, block: DslRequestBuilder.() -> Unit = {}): MvcResult {
+    return performDsl(this, MockMvcRequestBuilders.request(method, url), block)
+}
+
+fun MockMvc.perform(method: HttpMethod, uri: URI, block: DslRequestBuilder.() -> Unit = {}): MvcResult {
+    return performDsl(this, MockMvcRequestBuilders.request(method, uri), block)
 }
 
 private fun performDsl(mockMvc: MockMvc,
-                       request: MockHttpServletRequestBuilder,
-                       requestInit: MockHttpServletRequestBuilder.() -> Unit,
-                       init: ResultActions.() -> Unit): MvcResult {
-    request.requestInit()
-    val perform = mockMvc.perform(request)
-    perform.init()
-    return perform.andReturn()
+                       requestBuilder: MockHttpServletRequestBuilder,
+                       block: DslRequestBuilder.() -> Unit = {}): MvcResult {
+    val request = DslRequestBuilder(requestBuilder).apply(block)
+    val result = mockMvc.perform(request.buildRequest())
+    return request.applyResult(result).andReturn()
 }

@@ -11,6 +11,10 @@ import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.ResultHandler
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers.*
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
 import javax.servlet.http.Cookie
@@ -30,7 +34,9 @@ class DslControllerTest : MockMvcProvider {
     @Test
     fun helloGet() {
         mockMvc.performGet("/hello?name=Petr") {
-            expectStatus { isOk }
+            andDo(print())
+            .andExpect(status().isOk) //legacy andDo/andExpect can still be used
+            .expectStatus { isOk } //chaining is supported but not really necessary
             expectContent { contentTypeCompatibleWith(MediaType.TEXT_HTML) }
             expectViewName("hello")
 
@@ -72,17 +78,10 @@ class DslControllerTest : MockMvcProvider {
     }
 
     @Test
-    fun helloPost() = performPost("/hello", {
-        contentType(MediaType.APPLICATION_FORM_URLENCODED)
-        param("surname", "Balat")
-    }) {
-        expectStatus { isOk }
-        expectContent { contentTypeCompatibleWith(MediaType.TEXT_HTML) }
-        expectViewName("hello")
-
-        expectModel {
-            size<Any>(2)
-            attribute("helloPostDto", HelloPostDto("Balat"))
+    fun helloPost() = performPost("/hello") {
+        builder {
+            contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            param("surname", "Balat")
         }
 
         expectModel<HelloPostDto>("helloPostDto") {
@@ -101,7 +100,7 @@ class DslControllerTest : MockMvcProvider {
 
     @Test
     fun `hello put with required parameters of method and url`() {
-        mockMvc.request(HttpMethod.PUT, "/hello") {
+        mockMvc.perform(HttpMethod.PUT, "/hello") {
             builder {
                 contentType(MediaType.APPLICATION_JSON)
                 content("""{"surname": "Jack"}""")
@@ -118,7 +117,7 @@ class DslControllerTest : MockMvcProvider {
 
     @Test
     fun `minimal call, builder, and expectation`() {
-        mockMvc.request(HttpMethod.GET, "/hello") {
+        mockMvc.perform(HttpMethod.GET, "/hello") {
             builder { param("name", "world") }
             expect { status { isOk } }
         }
