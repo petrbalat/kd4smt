@@ -20,12 +20,12 @@ import javax.servlet.http.Cookie
 @ExtendWith(SpringExtension::class)
 @ActiveProfiles("test")
 @SpringBootTest(classes = [KD4SMTApplication::class])
-class DslControllerTest : MockMvcProvider {
+class DslControllerTest  {
 
     @Autowired
     lateinit var context: WebApplicationContext
 
-    override val mockMvc: MockMvc  by lazy {
+    val mockMvc: MockMvc  by lazy {
         MockMvcBuilders.webAppContextSetup(context).build()
     }
 
@@ -36,7 +36,7 @@ class DslControllerTest : MockMvcProvider {
             printRequestAndResponse() //Autocomplete that enables `print()` action
             expect {
                 json("""{"surname":"Petr"}""", strict = false)  //JsonAssert support (non-strict is the default)
-                "$.surname" jsonPathIs "Petr" //JsonPath
+                "$.surname" jsonPathIs name //JsonPath
             }
         }
     }
@@ -75,7 +75,7 @@ class DslControllerTest : MockMvcProvider {
     }
 
     @Test
-    fun helloGetExpression() = performGet(createUri("/hello?name={0}", "Petr")) {
+    fun `test get page`() = mockMvc.performGet(createUri("/hello?name={0}", "Petr")) {
         expectStatus { isOk }
         expectContent { contentTypeCompatibleWith(MediaType.TEXT_HTML) }
         expectViewName("hello")
@@ -96,7 +96,7 @@ class DslControllerTest : MockMvcProvider {
     }
 
     @Test
-    fun helloPost() = performPost("/hello") {
+    fun `test post page`() = mockMvc.performPost("/hello") {
         builder {
             contentType(MediaType.APPLICATION_FORM_URLENCODED)
             param("surname", "Balat")

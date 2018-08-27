@@ -63,7 +63,7 @@ fun `hello json`() {
         printRequestAndResponse() //Autocomplete that enables `print()` action
         expect {
             json("""{"surname":"Petr"}""", strict = false)  //JsonAssert support (non-strict is the default)
-            "$.surname" jsonPathIs "Petr" //JsonPath 
+            "$.surname" jsonPathIs name //JsonPath 
         }
     }
 }
@@ -92,29 +92,6 @@ fun helloGet() {
     }
 }
 ```
-
-or if you implement MockMvcProvider (see [DslControllerTest](src/test/kotlin/cz/petrbalat/spring/mvc/test/dsl/controller/DslControllerTest.kt)):
-
-```kotlin
- override val mvc: MockMvc
- 
-     @Test
-     fun helloGetExpression() = performGet("/hello?name=Petr") {
-         //typical DSL content
-     }
-     
-    @Test
-    fun helloPost() = performPost("/hello") {
-        builder {
-            contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            param("surname", "Balat")
-        }
-        expect {
-            // typical exptations
-        }
-    }
-```
-
 ## How to use
 
 Gradle:
