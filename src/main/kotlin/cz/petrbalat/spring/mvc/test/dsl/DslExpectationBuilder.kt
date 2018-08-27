@@ -82,4 +82,8 @@ class DslExpectationBuilder(private val actions: ResultActions) {
     infix fun String.jsonPathIs(value: Any) {
         actions.andExpect(MockMvcResultMatchers.jsonPath(this, CoreMatchers.`is`(value)))
     }
+
+    fun json(jsonContent: String, strict: Boolean = false) {
+        actions.andExpect(MockMvcResultMatchers.content().json(jsonContent, strict))
+    }
 }
