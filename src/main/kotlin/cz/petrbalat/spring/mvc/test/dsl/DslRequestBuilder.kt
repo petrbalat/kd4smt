@@ -88,13 +88,13 @@ class DslRequestBuilder(private val requestBuilder: MockHttpServletRequestBuilde
         return this
     }
 
-    fun expectJsonPath(expression:String, vararg args:Any, jsonInit: JsonPathResultMatchers.() -> ResultMatcher): DslRequestBuilder {
-        expect { jsonPath(expression, args = *arrayOf(args), jsonInit = jsonInit) }
+    fun expectJsonPath(expression:String, vararg args:Any, block: JsonPathResultMatchers.() -> ResultMatcher): DslRequestBuilder {
+        expect { jsonPath(expression, args = *arrayOf(args), block = block) }
         return this
     }
 
-    fun expectXPath(expression:String, vararg args:Any, xpatInit: XpathResultMatchers.() -> ResultMatcher): DslRequestBuilder {
-        expect { xPath(expression, args = *arrayOf(args), xpatInit = xpatInit) }
+    fun expectXPath(expression:String, vararg args:Any, xpathInit: XpathResultMatchers.() -> ResultMatcher): DslRequestBuilder {
+        expect { xPath(expression, args = *arrayOf(args), xpathInit = xpathInit) }
         return this
     }
 

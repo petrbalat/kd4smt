@@ -10,7 +10,10 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.springframework.test.util.AssertionErrors
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.MvcResult
+import org.springframework.test.web.servlet.ResultMatcher
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
@@ -37,6 +40,11 @@ class DslControllerTest  {
             expect {
                 json("""{"surname":"Petr"}""", strict = false)  //JsonAssert support (non-strict is the default)
                 "$.surname" jsonPathIs name //JsonPath
+
+                "surname" jsonPath { value("Petr")}
+                jsonPath("surname") {value("Petr")}
+
+                +HandlerMethod("helloJson")
             }
         }
     }
@@ -139,5 +147,15 @@ class DslControllerTest  {
     fun `minimal call, builder, and expectation`() = mockMvc.performGet( "/hello") {
         builder { param("name", "world") }
         expect { status { isOk } }
+    }
+}
+
+/** Silly example matcher to demonstrate how to add custom matchers that aren't in the DSL using unary operator */
+class HandlerMethod(val name: String): ResultMatcher {
+    override fun match(result: MvcResult) {
+        if(result.handler is org.springframework.web.method.HandlerMethod) {
+            val handlerMethod = result.handler as org.springframework.web.method.HandlerMethod
+            AssertionErrors.assertEquals("Handler name", name, handlerMethod.method.name)
+        }
     }
 }
