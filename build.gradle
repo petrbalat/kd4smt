@@ -28,7 +28,7 @@ bootJar {
     classifier = 'boot'
 }
 
-version = '0.5.0'
+version = '0.6.0'
 sourceCompatibility = 1.8
 compileKotlin {
     kotlinOptions.jvmTarget = "1.8"
