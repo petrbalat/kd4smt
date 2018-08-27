@@ -17,8 +17,6 @@ class DslRequestBuilder(private val requestBuilder: MockHttpServletRequestBuilde
 
     private val actions: MutableList<ResultActions.() -> Unit> = mutableListOf()
 
-    private val expects: MutableList<DslExpectationBuilder.() -> Unit> = mutableListOf()
-
     fun printRequestAndResponse() {
         actions { andDo(MockMvcResultHandlers.print()) }
     }
@@ -28,7 +26,7 @@ class DslRequestBuilder(private val requestBuilder: MockHttpServletRequestBuilde
     }
 
     fun expect(block: DslExpectationBuilder.() -> Unit) {
-        this.expects.add(block)
+        this.actions { DslExpectationBuilder(this).apply(block) }
     }
 
     fun actions(block: ResultActions.() -> Unit) {
@@ -42,8 +40,6 @@ class DslRequestBuilder(private val requestBuilder: MockHttpServletRequestBuilde
 
     fun applyResult(result: ResultActions): ResultActions {
         actions.forEach { result.apply(it) }
-        val expectationBuild = DslExpectationBuilder(result)
-        expects.forEach { expectationBuild.apply(it) }
         return result
     }
 
