@@ -151,11 +151,12 @@ class DslControllerTest  {
 }
 
 /** Silly example matcher to demonstrate how to add custom matchers that aren't in the DSL using unary operator */
-class HandlerMethod(val name: String): ResultMatcher {
+class HandlerMethod(private val name: String): ResultMatcher {
+
     override fun match(result: MvcResult) {
-        if(result.handler is org.springframework.web.method.HandlerMethod) {
-            val handlerMethod = result.handler as org.springframework.web.method.HandlerMethod
-            AssertionErrors.assertEquals("Handler name", name, handlerMethod.method.name)
+        val handler = result.handler
+        if(handler is org.springframework.web.method.HandlerMethod) {
+            AssertionErrors.assertEquals("Handler name", name, handler.method.name)
         }
     }
 }
