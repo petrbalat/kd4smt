@@ -1,6 +1,7 @@
 package cz.petrbalat.spring.mvc.test.dsl
 
 import org.hamcrest.CoreMatchers
+import org.hamcrest.Matcher
 import org.springframework.http.HttpStatus
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.ResultMatcher
@@ -56,13 +57,18 @@ class DslExpectationBuilder(private val actions: ResultActions) {
         actions.andExpect(flash)
     }
 
-    fun jsonPath(expression:String, vararg args:Any, jsonInit: JsonPathResultMatchers.() -> ResultMatcher) {
-        val json = MockMvcResultMatchers.jsonPath(expression, args).jsonInit()
+    fun <T> jsonPath(expression:String, matcher : Matcher<T>) {
+        val json = MockMvcResultMatchers.jsonPath(expression, matcher)
         actions.andExpect(json)
     }
 
-    fun xPath(expression:String, vararg args:Any, xpatInit: XpathResultMatchers.() -> ResultMatcher) {
-        val xpath = MockMvcResultMatchers.xpath(expression, args).xpatInit()
+    fun jsonPath(expression:String, vararg args:Any, block: JsonPathResultMatchers.() -> ResultMatcher) {
+        val xpath = MockMvcResultMatchers.jsonPath(expression, args).block()
+        actions.andExpect(xpath)
+    }
+
+    fun xPath(expression:String, vararg args:Any, xpathInit: XpathResultMatchers.() -> ResultMatcher) {
+        val xpath = MockMvcResultMatchers.xpath(expression, args).xpathInit()
         actions.andExpect(xpath)
     }
 
@@ -79,8 +85,20 @@ class DslExpectationBuilder(private val actions: ResultActions) {
         content { string(value) }
     }
 
+    infix fun String.jsonPath(block: JsonPathResultMatchers.() -> ResultMatcher) {
+        actions.andExpect(MockMvcResultMatchers.jsonPath(this).block())
+    }
+
     infix fun String.jsonPathIs(value: Any) {
         actions.andExpect(MockMvcResultMatchers.jsonPath(this, CoreMatchers.`is`(value)))
+    }
+
+    infix fun <T> String.jsonPathMatcher(value: Matcher<T>) {
+        actions.andExpect(MockMvcResultMatchers.jsonPath(this, value))
+    }
+
+    operator fun ResultMatcher.unaryPlus(){
+        actions.andExpect(this)
     }
 
     fun json(jsonContent: String, strict: Boolean = false) {

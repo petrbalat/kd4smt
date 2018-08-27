@@ -17,8 +17,6 @@ class DslRequestBuilder(private val requestBuilder: MockHttpServletRequestBuilde
 
     private val actions: MutableList<ResultActions.() -> Unit> = mutableListOf()
 
-    private val expects: MutableList<DslExpectationBuilder.() -> Unit> = mutableListOf()
-
     fun printRequestAndResponse() {
         actions { andDo(MockMvcResultHandlers.print()) }
     }
@@ -28,7 +26,7 @@ class DslRequestBuilder(private val requestBuilder: MockHttpServletRequestBuilde
     }
 
     fun expect(block: DslExpectationBuilder.() -> Unit) {
-        this.expects.add(block)
+        this.actions { DslExpectationBuilder(this).apply(block) }
     }
 
     fun actions(block: ResultActions.() -> Unit) {
@@ -42,8 +40,6 @@ class DslRequestBuilder(private val requestBuilder: MockHttpServletRequestBuilde
 
     fun applyResult(result: ResultActions): ResultActions {
         actions.forEach { result.apply(it) }
-        val expectationBuild = DslExpectationBuilder(result)
-        expects.forEach { expectationBuild.apply(it) }
         return result
     }
 
@@ -92,13 +88,13 @@ class DslRequestBuilder(private val requestBuilder: MockHttpServletRequestBuilde
         return this
     }
 
-    fun expectJsonPath(expression:String, vararg args:Any, jsonInit: JsonPathResultMatchers.() -> ResultMatcher): DslRequestBuilder {
-        expect { jsonPath(expression, args = *arrayOf(args), jsonInit = jsonInit) }
+    fun expectJsonPath(expression:String, vararg args:Any, block: JsonPathResultMatchers.() -> ResultMatcher): DslRequestBuilder {
+        expect { jsonPath(expression, args = *arrayOf(args), block = block) }
         return this
     }
 
-    fun expectXPath(expression:String, vararg args:Any, xpatInit: XpathResultMatchers.() -> ResultMatcher): DslRequestBuilder {
-        expect { xPath(expression, args = *arrayOf(args), xpatInit = xpatInit) }
+    fun expectXPath(expression:String, vararg args:Any, xpathInit: XpathResultMatchers.() -> ResultMatcher): DslRequestBuilder {
+        expect { xPath(expression, args = *arrayOf(args), xpathInit = xpathInit) }
         return this
     }
 

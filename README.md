@@ -97,7 +97,7 @@ fun helloGet() {
 Gradle:
 ```
 repositories {
-    url("https://mymavenrepo.com/repo/plFabfZlZhQO7UjsJKDc/")
+    maven {url("https://mymavenrepo.com/repo/plFabfZlZhQO7UjsJKDc/")}
 }
     
 ...
