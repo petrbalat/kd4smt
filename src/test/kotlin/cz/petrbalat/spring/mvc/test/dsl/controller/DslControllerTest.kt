@@ -1,19 +1,17 @@
 package cz.petrbalat.spring.mvc.test.dsl.controller
 
 import cz.petrbalat.spring.mvc.test.dsl.*
+import junit.framework.TestCase.assertTrue
 import org.junit.Assert.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.ResultHandler
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers.*
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
@@ -32,11 +30,23 @@ class DslControllerTest : MockMvcProvider {
     }
 
     @Test
+    fun `hello json`() {
+        val name = "Petr"
+        mockMvc.performGet("/hello/$name") {
+            printRequestAndResponse() //Autocomplete that enables `print()` action
+            expect {
+                json("""{"surname":"Petr"}""", strict = false)  //JsonAssert support (non-strict is the default)
+                "$.surname" jsonPathIs "Petr" //JsonPath
+            }
+        }
+    }
+
+    @Test
     fun helloGet() {
         mockMvc.performGet("/hello?name=Petr") {
             andDo(print())
-            .andExpect(status().isOk) //legacy andDo/andExpect can still be used
-            .expectStatus { isOk } //chaining is supported but not really necessary
+                    .andExpect(status().isOk) //legacy andDo/andExpect can still be used
+                    .expectStatus { isOk } //chaining is supported but not really necessary
             expectContent { contentTypeCompatibleWith(MediaType.TEXT_HTML) }
             expectViewName("hello")
 
@@ -52,6 +62,14 @@ class DslControllerTest : MockMvcProvider {
             expectXPath("""//span[@class="name"]""") {
                 nodeCount(1)
                 string("Petr")
+            }
+
+            actions {
+                assertTrue(andReturn().response.contentAsString.contains("Hello world"))
+            }
+
+            withResult {
+                assertTrue(response.contentAsString.contains("Hello world"))
             }
         }
     }
@@ -100,7 +118,7 @@ class DslControllerTest : MockMvcProvider {
 
     @Test
     fun `hello put with required parameters of method and url`() {
-        mockMvc.perform(HttpMethod.PUT, "/hello") {
+        mockMvc.performPut("/hello") {
             builder {
                 contentType(MediaType.APPLICATION_JSON)
                 content("""{"surname": "Jack"}""")
@@ -110,16 +128,16 @@ class DslControllerTest : MockMvcProvider {
 
             expect {
                 status { isBadRequest }
+                json("""{"surname":"Jack"}""")
+                json("""{"surname":"Jack", "extraName":"Extra Things"}""", strict = true)
             }
             expect { "$.surname" jsonPathIs "Jack" } //builder,actions, and expects can be called multiple times
         }
     }
 
     @Test
-    fun `minimal call, builder, and expectation`() {
-        mockMvc.perform(HttpMethod.GET, "/hello") {
-            builder { param("name", "world") }
-            expect { status { isOk } }
-        }
+    fun `minimal call, builder, and expectation`() = mockMvc.performGet( "/hello") {
+        builder { param("name", "world") }
+        expect { status { isOk } }
     }
 }

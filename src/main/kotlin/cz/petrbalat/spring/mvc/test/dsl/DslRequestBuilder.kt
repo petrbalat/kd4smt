@@ -1,9 +1,6 @@
 package cz.petrbalat.spring.mvc.test.dsl
 
-import org.springframework.test.web.servlet.RequestBuilder
-import org.springframework.test.web.servlet.ResultActions
-import org.springframework.test.web.servlet.ResultHandler
-import org.springframework.test.web.servlet.ResultMatcher
+import org.springframework.test.web.servlet.*
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
 import org.springframework.test.web.servlet.result.*
 
@@ -115,5 +112,9 @@ class DslRequestBuilder(private val requestBuilder: MockHttpServletRequestBuilde
     fun andExpect(action: ResultMatcher): DslRequestBuilder {
         actions { andExpect(action)}
         return this
+    }
+
+    fun withResult(block: MvcResult.() -> Unit) {
+        actions { andReturn().apply(block) }
     }
 }

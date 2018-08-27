@@ -10,17 +10,23 @@ class HelloController {
         modelMap["name"] = name
         return "hello"
     }
+    
+    @GetMapping("/hello/{name}")
+    @ResponseBody
+    fun helloJson(@PathVariable name: String) = HelloPostDto(surname = name)
+
 
     @PostMapping("/hello")
     fun helloPost(dto: HelloPostDto, modelMap: ModelMap): String = "hello"
 
 }
 
+
 data class HelloPostDto(var surname:String = "World")
 ```
 
 
-### Standart spring mvc test (see StandardControllerTest):
+### Standart spring mvc test (see [StandardControllerTest](src/test/kotlin/cz/petrbalat/spring/mvc/test/dsl/controller/StandardControllerTest.kt)): 
 
 ```kotlin
  val mvc: MockMvc
@@ -46,90 +52,70 @@ data class HelloPostDto(var surname:String = "World")
 
 ```
 
-### With this library dsl spring mvc test (see DslControllerTest):
+### With this library dsl spring mvc test (see [DslControllerTest](src/test/kotlin/cz/petrbalat/spring/mvc/test/dsl/controller/DslControllerTest.kt)):
 ```kotlin
- val mvc: MockMvc
- 
- @Test
- fun helloGet() {
-         mockMvc.performGet("/hello?name=Petr") {
-             expectStatus { isOk }
-             expectContent { contentTypeCompatibleWith(MediaType.TEXT_HTML) }
-             expectViewName("hello")
- 
-             expectModel {
-                 size<Any>(1)
-                 attribute("name", "Petr")
-             }
- 
-             expectXPath("//h1") {
-                 nodeCount(1)
-             }
- 
-             expectXPath("""//span[@class="name"]""") {
-                 nodeCount(1)
-                 string("Petr")
-             }
-         }
-     }
+val mockMvc: MockMvc
+
+@Test
+fun `hello json`() {
+    val name = "Petr"
+    mockMvc.performGet("/hello/$name") {
+        printRequestAndResponse() //Autocomplete that enables `print()` action
+        expect {
+            json("""{"surname":"Petr"}""", strict = false)  //JsonAssert support (non-strict is the default)
+            "$.surname" jsonPathIs "Petr" //JsonPath 
+        }
+    }
+}
+
+@Test
+fun helloGet() {
+    mockMvc.performGet("/hello") {
+        builder {
+            param("name","Petr")
+        }
+        expect {
+            status { isOk }
+            content { contentTypeCompatibleWith(MediaType.TEXT_HTML) }
+            viewName("hello")
+            
+            model {
+                size<Any>(1)
+                attribute("name", "Petr")
+            }
+            xPath("//h1") { nodeCount(1) }
+            xPath("""//span[@class="name"]""") {
+                nodeCount(1)
+                string("Petr")
+            }
+        }
+    }
+}
 ```
 
-or if you implement MockMvcProvider  (see DslControllerTest):
+or if you implement MockMvcProvider (see [DslControllerTest](src/test/kotlin/cz/petrbalat/spring/mvc/test/dsl/controller/DslControllerTest.kt)):
 
 ```kotlin
  override val mvc: MockMvc
  
- @Test
- fun helloGetExpression() = performGet("/hello?name=Petr") {
-         expectStatus { isOk }
-         expectContent { contentTypeCompatibleWith(MediaType.TEXT_HTML) }
-         expectViewName("hello")
- 
-         expectModel {
-             size<Any>(1)
-             attribute("name", "Petr")
-         }
- 
-         expectXPath("//h1") {
-             nodeCount(1)
-         }
- 
-         expectXPath("""//span[@class="name"]""") {
-             nodeCount(1)
-             string("Petr")
-         }
+     @Test
+     fun helloGetExpression() = performGet("/hello?name=Petr") {
+         //typical DSL content
      }
      
     @Test
-    fun helloPost() = performPost("/hello", requestInit = {
-        contentType(MediaType.APPLICATION_FORM_URLENCODED)
-        param("surname", "Balat")
-    }) {
-        expectStatus { isOk }
-        expectContent { contentTypeCompatibleWith(MediaType.TEXT_HTML) }
-        expectViewName("hello")
-
-        expectModel {
-            size<Any>(2)
-            attribute("helloPostDto", HelloPostDto("Balat"))
+    fun helloPost() = performPost("/hello") {
+        builder {
+            contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            param("surname", "Balat")
         }
-
-        expectModel<HelloPostDto>("helloPostDto") {
-            assertEquals("Balat", surname)
-        }
-
-        expectXPath("//h1") {
-            nodeCount(1)
-        }
-
-        expectXPath("""//span[@class="name"]""") {
-            nodeCount(1)
-            string("Balat")
+        expect {
+            // typical exptations
         }
     }
 ```
 
-##How to use
+## How to use
 
 Gradle:
 ```
@@ -153,7 +139,6 @@ Maven:
 
 
 ...
-
 
 <repository>
     <id>kd4smt-mvn-repo</id>
