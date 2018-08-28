@@ -94,7 +94,7 @@ class DslRequestBuilder(private val requestBuilder: MockHttpServletRequestBuilde
     }
 
     fun expectXPath(expression:String, vararg args:Any, xpathInit: XpathResultMatchers.() -> ResultMatcher): DslRequestBuilder {
-        expect { xPath(expression, args = *arrayOf(args), xpathInit = xpathInit) }
+        expect { xpath(expression, args = *arrayOf(args), xpathInit = xpathInit) }
         return this
     }
 
