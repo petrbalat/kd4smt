@@ -33,7 +33,7 @@ class DslExpectationBuilder(private val actions: ResultActions) {
     fun <T> model(name: String, modelInit: T.() -> Unit) {
         actions.andExpect { mvcResult ->
             val model = mvcResult.modelAndView?.model?.get(name) as T?
-            model?.modelInit()
+            model?.modelInit() ?: throw AssertionError("Model attribute $name was not found")
         }
     }
 
@@ -67,7 +67,7 @@ class DslExpectationBuilder(private val actions: ResultActions) {
         actions.andExpect(xpath)
     }
 
-    fun xPath(expression:String, vararg args:Any, xpathInit: XpathResultMatchers.() -> ResultMatcher) {
+    fun xpath(expression:String, vararg args:Any, xpathInit: XpathResultMatchers.() -> ResultMatcher) {
         val xpath = MockMvcResultMatchers.xpath(expression, args).xpathInit()
         actions.andExpect(xpath)
     }
@@ -89,7 +89,7 @@ class DslExpectationBuilder(private val actions: ResultActions) {
         actions.andExpect(MockMvcResultMatchers.jsonPath(this).block())
     }
 
-    infix fun String.jsonPathIs(value: Any) {
+    infix fun String.jsonPathIs(value: Any?) {
         actions.andExpect(MockMvcResultMatchers.jsonPath(this, CoreMatchers.`is`(value)))
     }
 
