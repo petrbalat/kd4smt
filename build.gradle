@@ -1,12 +1,12 @@
 buildscript {
     ext {
         kotlinVersion = '1.3.0'
-        springBootVersion = '2.1.0.RC1'
+        springBootVersion = '2.1.0.RELEASE'
     }
     repositories {
         mavenLocal()
         mavenCentral()
-        maven { url "https://repo.spring.io/milestone" }
+//        maven { url "https://repo.spring.io/milestone" }
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -28,7 +28,7 @@ bootJar {
     classifier = 'boot'
 }
 
-version = '0.7.0'
+version = '0.7.1'
 sourceCompatibility = 1.8
 compileKotlin {
     kotlinOptions.jvmTarget = "1.8"
@@ -43,7 +43,7 @@ repositories {
     mavenLocal()
     jcenter()
     mavenCentral()
-    maven { url "https://repo.spring.io/milestone" }
+//    maven { url "https://repo.spring.io/milestone" }
 }
 
 
