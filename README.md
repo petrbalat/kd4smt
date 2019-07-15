@@ -1,5 +1,7 @@
 # kd4smt - Kotlin dsl for spring mvc test
 
+Will be in next spring version 5.2 see [https://docs.spring.io/spring/docs/5.2.0.M1/spring-framework-reference/languages.html#mockmvc-dsl]
+
 Imagine that you have spring mvc controller
 ```kotlin
 @Controller
