@@ -3,6 +3,7 @@ package cz.petrbalat.spring.mvc.test.dsl.controller
 import cz.petrbalat.spring.mvc.test.dsl.*
 import junit.framework.TestCase.assertTrue
 import org.junit.Assert.assertEquals
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -28,7 +29,7 @@ class DslControllerTest  {
     @Autowired
     lateinit var context: WebApplicationContext
 
-    val mockMvc: MockMvc  by lazy {
+    val mockMvc: MockMvc by lazy {
         MockMvcBuilders.webAppContextSetup(context).build()
     }
 
@@ -59,7 +60,7 @@ class DslControllerTest  {
             expectViewName("hello")
 
             expectModel {
-                size<Any>(1)
+                size(1)
                 attribute("name", "Petr")
             }
 
@@ -89,7 +90,7 @@ class DslControllerTest  {
         expectViewName("hello")
 
         expectModel {
-            size<Any>(1)
+            size(1)
             attribute("name", "Petr")
         }
 
